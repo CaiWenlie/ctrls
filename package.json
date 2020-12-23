@@ -1,7 +1,7 @@
 {
   "name": "ctrls",
   "email": "ekpg@msn.com",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "frontend view controllers",
   "main": "dist/index.js",
   "scripts": {
@@ -16,5 +16,6 @@
   "dependencies": {
     "@types/lodash": "^4.14.165",
     "lodash": "^4.17.20"
-  }
+  },
+  "homepage": "https://github.com/CaiWenlie/ctrls"
 }

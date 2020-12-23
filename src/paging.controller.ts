@@ -1,13 +1,13 @@
-import ListController, { Res, TListService } from './list.controller'
+import ListController, { TListService } from './list.controller'
 
-type TPagingService<T, P> = Omit<TListService<T, P>, 'list'> & { list: (params: P & Partial<Paging>) => Promise<PagingRes<T[]>> }
+type TPagingService<T, P> = Omit<TListService<T, P>, 'list'> & { list: (params: P & Partial<Pagination>) => Promise<any> }
 
 // 通用list翻页控制器
 // T: list item类型
 // P: list param类型
 export default class PagingController<T = any, P = any> extends ListController<T, P> {
   service: TPagingService<T, P>
-  paging: Paging = {
+  _pagination: Pagination = {
     itemTotal: 0,
     pageIndex: 1,
     pageSize: 10
@@ -18,10 +18,33 @@ export default class PagingController<T = any, P = any> extends ListController<T
     this.service = service
   }
 
-  async fetchList(data?: Partial<Paging> & Partial<P>) {
-    const params = { ...this.params, ...this.paging, ...data }
+  get pagination() {
+    return this.paginationGetter(this._pagination)
+  }
+
+  // to be customised
+  paginationGetter(pagination: Pagination) {
+    return {
+      itemTotal: pagination.itemTotal,
+      pageIndex: pagination.pageIndex,
+      pageSize: pagination.pageSize
+    }
+  }
+
+  // to be customised
+  resReader(res: any) {
+    return {
+      list: res.data,
+      itemTotal: res.itemTotal,
+      pageIndex: res.pageIndex,
+      pageSize: res.pageSize
+    }
+  }
+
+  async fetchList(data?: Partial<Pagination> & Partial<P>) {
+    const params = { ...this.params, ...this.pagination, ...data }
     Object.keys(params).forEach(key => {
-      if (!['itemTotal', 'pageIndex', 'pageSize'].includes(key)) {
+      if (!Object.keys(this.pagination).includes(key)) {
         (this.params as any)[key] = (params as any)[key]
       }
     })
@@ -30,19 +53,15 @@ export default class PagingController<T = any, P = any> extends ListController<T
       .finally(() => {
         this.loading = false
       })
-    const { itemTotal, pageIndex } = res
-    const { pageSize } = params
-    this.paging = { itemTotal, pageIndex, pageSize }
-    this.list = res.data
+    const { list, itemTotal, pageIndex, pageSize } = this.resReader(res)
+    this._pagination = { itemTotal, pageIndex, pageSize }
+    this.list = list
     return res
   }
 }
 
-export interface Paging {
+export interface Pagination {
   pageSize: number
   pageIndex: number
   itemTotal: number
 }
-
-export type PagingParams = Partial<Paging>
-export type PagingRes<T = any> = Res<T> & Paging

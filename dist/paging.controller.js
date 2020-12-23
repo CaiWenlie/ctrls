@@ -5,17 +5,36 @@ import ListController from './list.controller';
 export default class PagingController extends ListController {
     constructor(service, params) {
         super(service, params);
-        this.paging = {
+        this._pagination = {
             itemTotal: 0,
             pageIndex: 1,
             pageSize: 10
         };
         this.service = service;
     }
+    get pagination() {
+        return this.paginationGetter(this._pagination);
+    }
+    // to be customised
+    paginationGetter(pagination) {
+        return {
+            itemTotal: pagination.itemTotal,
+            pageIndex: pagination.pageIndex,
+            pageSize: pagination.pageSize
+        };
+    }
+    // to be customised
+    resReader(res) {
+        return {
+            list: res.data,
+            itemTotal: res.itemTotal,
+            pageIndex: res.pageIndex
+        };
+    }
     async fetchList(data) {
-        const params = { ...this.params, ...this.paging, ...data };
+        const params = { ...this.params, ...this.pagination, ...data };
         Object.keys(params).forEach(key => {
-            if (!['itemTotal', 'pageIndex', 'pageSize'].includes(key)) {
+            if (!Object.keys(this.pagination).includes(key)) {
                 this.params[key] = params[key];
             }
         });
@@ -24,10 +43,10 @@ export default class PagingController extends ListController {
             .finally(() => {
             this.loading = false;
         });
-        const { itemTotal, pageIndex } = res;
+        const { list, itemTotal, pageIndex } = this.resReader(res);
         const { pageSize } = params;
-        this.paging = { itemTotal, pageIndex, pageSize };
-        this.list = res.data;
+        this._pagination = { itemTotal, pageIndex, pageSize };
+        this.list = list;
         return res;
     }
 }

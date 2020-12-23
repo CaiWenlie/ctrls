@@ -33,8 +33,15 @@ export default class ListController<T = any, P = any> {
       .finally(() => {
         this.loading = false
       })
-    this.list = res.data
+    this.list = this.resReader(res).list
     return res
+  }
+
+  // to be customised
+  resReader(res: any) {
+    return {
+      list: res.data
+    }
   }
 
   async fetchDetail(data: Partial<T>) {
@@ -73,19 +80,9 @@ export default class ListController<T = any, P = any> {
 // T: list item类型
 // P: list param类型
 export interface TListService<T, P> {
-  list(params: P & any): Promise<Res<T[]>>
+  list(params: P & any): Promise<any>
   create?(data: Partial<T> & any): Promise<any>
   remove?(data: Partial<T> & any): Promise<any>
   update?(data: Partial<T> & any): Promise<any>
   detail?(data: Partial<T> & any): Promise<any>
-}
-
-export interface Res<T = any> {
-  success: boolean
-  data: T
-  statusCode: string
-  desc: string
-  itemTotal?: number
-  pageTotal?: number
-  relation?: any
 }

@@ -25,8 +25,14 @@ export default class ListController {
             .finally(() => {
             this.loading = false;
         });
-        this.list = res.data;
+        this.list = this.resReader(res).list;
         return res;
+    }
+    // to be customised
+    resReader(res) {
+        return {
+            list: res.data
+        };
     }
     async fetchDetail(data) {
         return this.service.detail(data);
