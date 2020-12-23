@@ -20,5 +20,8 @@
     "@types/lodash": "^4.14.165",
     "lodash": "^4.17.20"
   },
-  "homepage": "https://github.com/CaiWenlie/ctrls"
+  "homepage": "https://github.com/CaiWenlie/ctrls",
+  "devDependencies": {
+    "pre-commit": "^1.2.2"
+  }
 }
