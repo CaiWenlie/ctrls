@@ -28,7 +28,8 @@ export default class PagingController extends ListController {
         return {
             list: res.data,
             itemTotal: res.itemTotal,
-            pageIndex: res.pageIndex
+            pageIndex: res.pageIndex,
+            pageSize: res.pageSize
         };
     }
     async fetchList(data) {
@@ -43,8 +44,7 @@ export default class PagingController extends ListController {
             .finally(() => {
             this.loading = false;
         });
-        const { list, itemTotal, pageIndex } = this.resReader(res);
-        const { pageSize } = params;
+        const { list, itemTotal, pageIndex, pageSize } = this.resReader(res);
         this._pagination = { itemTotal, pageIndex, pageSize };
         this.list = list;
         return res;
