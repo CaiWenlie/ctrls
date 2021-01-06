@@ -1,7 +1,7 @@
 {
   "name": "ctrls",
   "email": "ekpg@msn.com",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "frontend view controllers",
   "main": "dist/index.js",
   "scripts": {
