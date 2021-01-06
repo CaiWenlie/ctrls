@@ -118,3 +118,13 @@ export default {
 }
 </script>
 ```
+
+***react使用示例***
+在react中可以借助`mobx`，使得`controller`的属性改变可以引起视图刷新。更多帮助请查看`mobx`文档。
+```js
+import { ModalController } from 'ctrls'
+import { observable } from 'mobx'
+
+// 输出控制器实例
+export const myModalController = observable(new ModalController())
+```
