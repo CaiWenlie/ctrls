@@ -1,11 +1,12 @@
 {
   "name": "ctrls",
   "email": "ekpg@msn.com",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "frontend view controllers",
   "main": "dist/index.js",
+  "types": "types/index.d.ts",
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "pre-commit": [

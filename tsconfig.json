@@ -8,7 +8,9 @@
     "moduleResolution": "node",
     "preserveConstEnums": true,
     "outDir": "dist",
-    "sourceMap": true
+    "sourceMap": true,
+    "declaration": true,
+    "declarationDir": "types"
   },
   "include": [
     "src/**/*"
